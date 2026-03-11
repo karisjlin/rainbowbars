@@ -1,46 +1,112 @@
-# Getting Started with Create React App
+# Rainbow Bars
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Rainbow Bars is a React and TypeScript app with a small Express backend. It renders animated horizontal bars, supports account sign-in in the UI, and lets each user save a custom seven-color palette for the bar animation.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- Animated horizontal bar display on the home route
+- Account page with per-bar color pickers and hex inputs
+- Saved color preview on the account page
+- About page with a custom styled project summary
+- Express API for saving and loading account bar colors
+- Client-side persistence with local storage fallback
 
-### `npm start`
+## Project Structure
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+```text
+gemini-test-app/
+  src/              React frontend
+  server/           Express + TypeScript backend
+  build/            Production frontend build output
+```
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Frontend Routes
 
-### `npm test`
+- `/karis`: home page with the animated bars
+- `/account`: account details and bar color settings
+- `/about`: about page
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Requirements
 
-### `npm run build`
+- Node.js
+- npm
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Install
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Install dependencies for the frontend:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```bash
+npm install
+```
 
-### `npm run eject`
+Install dependencies for the backend:
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+```bash
+cd server
+npm install
+```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Run in Development
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+Start the React app from the project root:
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+```bash
+npm start
+```
 
-## Learn More
+Start the Express server from the `server` directory:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```bash
+npm start
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+By default:
+
+- Frontend runs on `http://localhost:3000`
+- Server runs on `http://localhost:3002`
+
+## Build
+
+Build the frontend from the project root:
+
+```bash
+npm run build
+```
+
+Build the backend from the `server` directory:
+
+```bash
+npm run build
+```
+
+## How Saved Colors Work
+
+- The account page lets the user set seven bar colors
+- Colors are validated as `#RRGGBB` hex values
+- Saved colors are posted to the backend API
+- The frontend also stores saved colors in local storage per user email
+- If the server has no saved in-memory colors available, the UI can still fall back to local storage
+
+## API Endpoints
+
+- `GET /api/account/colors/:email`: load saved colors for an account
+- `POST /api/account/colors`: save a full seven-color palette for an account
+
+## Notes
+
+- The backend currently stores saved colors in memory, so restarting the server clears the server-side map
+- The frontend may still show previously saved colors from local storage for the same browser session history
+
+## Scripts
+
+Frontend scripts:
+
+- `npm start`
+- `npm run build`
+- `npm test`
+
+Backend scripts:
+
+- `npm start`
+- `npm run build`
+

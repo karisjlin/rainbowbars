@@ -1,0 +1,94 @@
+.about-page {
+  min-height: calc(100vh - 70px);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 32px 24px 48px;
+  box-sizing: border-box;
+}
+
+.about-card {
+  width: 100%;
+  max-width: 720px;
+  background: linear-gradient(180deg, #ffffff 0%, #eef4ff 100%);
+  color: #142132;
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.22);
+  border: 1px solid rgba(151, 167, 191, 0.35);
+}
+
+.about-eyebrow {
+  margin: 0 0 8px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #2f6fed;
+}
+
+.about-card h1 {
+  margin: 0 0 12px;
+  font-size: clamp(2rem, 5vw, 3rem);
+  line-height: 1.05;
+}
+
+.about-title {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.02em;
+}
+
+.rainbow-red {
+  color: #ff0000;
+}
+
+.rainbow-orange {
+  color: #ff7a00;
+}
+
+.rainbow-yellow {
+  color: #e0b400;
+}
+
+.rainbow-green {
+  color: #15803d;
+}
+
+.rainbow-blue {
+  color: #2563eb;
+}
+
+.rainbow-indigo {
+  color: #4338ca;
+}
+
+.rainbow-violet {
+  color: #7c3aed;
+}
+
+.rainbow-space {
+  width: 0.3em;
+}
+
+.about-lead {
+  margin: 0 0 24px;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: #304256;
+}
+
+.about-section + .about-section {
+  margin-top: 22px;
+}
+
+.about-section h2 {
+  margin: 0 0 8px;
+  font-size: 1.1rem;
+}
+
+.about-section p {
+  margin: 0;
+  line-height: 1.7;
+  color: #415468;
+}
