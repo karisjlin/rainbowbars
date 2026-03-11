@@ -23,16 +23,13 @@ body {
   overflow: hidden;
 }
 
-.bars-stage-interactive {
-  cursor: none;
-}
 
 .horizontal-bar {
   width: 0; /* Start with no width */
   background-color: #61dafb; /* A nice blue color */
-  transition-property: width, transform;
+  transition-property: width, margin-left;
   transition-timing-function: ease-in-out;
-  will-change: width, transform;
+  will-change: width, margin-left;
 }
 
 /* This class will be added to trigger the animation */
@@ -41,8 +38,7 @@ body {
 }
 
 .horizontal-bar.mouse-reactive {
-  transition-timing-function: ease-in-out, ease-out;
-  transition-duration: inherit, 140ms;
+  transition-timing-function: ease-out, ease-out;
 }
 
 .app-header {
