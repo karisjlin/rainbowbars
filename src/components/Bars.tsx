@@ -1,39 +1,21 @@
 import React, { useState, useEffect } from 'react';
+import { useAuth } from '../context/AuthContext';
 const barSpeeds = [.5, 1, 2, 4, 8, 16, 32];
 const defaultColors = ['#FF0000', '#FFA500', '#FFFF00', '#008000', '#0000FF', '#4B0082', '#EE82EE'];
 const HEX_COLOR_REGEX = /^#([0-9A-Fa-f]{6})$/;
-const CURRENT_USER_CHANGE_EVENT = 'currentuserchange';
 const API_BASE =
   process.env.REACT_APP_API_BASE ||
   (window.location.port === '3000' ? 'http://localhost:3002' : window.location.origin);
 
 interface BarsProps {
   colors?: string[];
-  currentUserEmail?: string;
   interactive?: boolean;
 }
 
-function getStoredCurrentUserEmail(): string {
-  const currentUserRaw = localStorage.getItem('currentUser');
-  if (!currentUserRaw) {
-    return '';
-  }
-
-  try {
-    const currentUser = JSON.parse(currentUserRaw) as { email?: string };
-    return currentUser.email?.trim().toLowerCase() || '';
-  } catch (error) {
-    return '';
-  }
-}
-
-function Bars({ colors: providedColors, currentUserEmail = '', interactive = false }: BarsProps) {
+function Bars({ colors: providedColors, interactive = false }: BarsProps) {
     const barHeight = 100/ barSpeeds.length;
     const [isFilled, setIsFilled] = useState(false);
     const [resolvedColors, setResolvedColors] = useState(defaultColors);
-    const [activeUserEmail, setActiveUserEmail] = useState(
-      currentUserEmail.trim().toLowerCase() || getStoredCurrentUserEmail()
-    );
     const [completedBars, setCompletedBars] = useState<boolean[]>(() =>
       barSpeeds.map(() => false)
     );
@@ -41,6 +23,8 @@ function Bars({ colors: providedColors, currentUserEmail = '', interactive = fal
     const [isPointerActive, setIsPointerActive] = useState(false);
     const [activeLaneIndex, setActiveLaneIndex] = useState<number | null>(null);
     const [animationCycle, setAnimationCycle] = useState(0);
+    const { currentUser, isLoggedIn } = useAuth();
+    const activeUserEmail = currentUser?.email?.trim().toLowerCase() || '';
 
     useEffect(() => {
         setIsFilled(false);
@@ -75,24 +59,6 @@ function Bars({ colors: providedColors, currentUserEmail = '', interactive = fal
     }, [animationCycle, interactive, isFilled]);
 
     useEffect(() => {
-      setActiveUserEmail(currentUserEmail.trim().toLowerCase() || getStoredCurrentUserEmail());
-    }, [currentUserEmail]);
-
-    useEffect(() => {
-      const syncActiveUser = () => {
-        setActiveUserEmail(getStoredCurrentUserEmail());
-      };
-
-      window.addEventListener('storage', syncActiveUser);
-      window.addEventListener(CURRENT_USER_CHANGE_EVENT, syncActiveUser);
-
-      return () => {
-        window.removeEventListener('storage', syncActiveUser);
-        window.removeEventListener(CURRENT_USER_CHANGE_EVENT, syncActiveUser);
-      };
-    }, []);
-
-    useEffect(() => {
       const hasValidProvidedColors =
         Array.isArray(providedColors) &&
         providedColors.length === barSpeeds.length &&
@@ -103,7 +69,6 @@ function Bars({ colors: providedColors, currentUserEmail = '', interactive = fal
         return;
       }
 
-      const isLoggedIn = Boolean(localStorage.getItem('currentUser'));
       if (!isLoggedIn) {
         setResolvedColors(defaultColors);
         return;
@@ -162,7 +127,7 @@ function Bars({ colors: providedColors, currentUserEmail = '', interactive = fal
       };
 
       syncColorsFromServer();
-    }, [activeUserEmail, providedColors]);
+    }, [activeUserEmail, isLoggedIn, providedColors]);
 
     const handlePointerMove = (e: React.MouseEvent<HTMLDivElement>) => {
       if (!interactive) {

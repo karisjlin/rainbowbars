@@ -2,31 +2,18 @@ import React, { useEffect, useRef, useState } from 'react';
 import { NavLink, Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import './CSS/App.css';
 import Modal from './components/Modal';
+import { useAuth } from './context/AuthContext';
 import AccountPage from './pages/account';
 import AboutPage from './pages/about';
 import HomePage from './pages/homepage';
 
-const CURRENT_USER_CHANGE_EVENT = 'currentuserchange';
-
 function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(Boolean(localStorage.getItem('currentUser')));
-  const [currentUserEmail, setCurrentUserEmail] = useState(() => {
-    const currentUserRaw = localStorage.getItem('currentUser');
-    if (!currentUserRaw) {
-      return '';
-    }
-
-    try {
-      const currentUser = JSON.parse(currentUserRaw) as { email?: string };
-      return currentUser.email?.trim().toLowerCase() || '';
-    } catch (error) {
-      return '';
-    }
-  });
   const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false);
   const accountMenuCloseTimer = useRef<number | null>(null);
   const navigate = useNavigate();
+  const { currentUser, isLoggedIn, logout } = useAuth();
+  const currentUserEmail = currentUser?.email?.trim().toLowerCase() || '';
   const barsInstanceKey = `${isLoggedIn ? 'logged-in' : 'logged-out'}:${currentUserEmail}`;
 
   useEffect(() => {
@@ -42,28 +29,11 @@ function App() {
   };
 
   const handleCloseModal = () => {
-    const currentUserRaw = localStorage.getItem('currentUser');
-    let nextEmail = '';
-
-    if (currentUserRaw) {
-      try {
-        const currentUser = JSON.parse(currentUserRaw) as { email?: string };
-        nextEmail = currentUser.email?.trim().toLowerCase() || '';
-      } catch (error) {
-        nextEmail = '';
-      }
-    }
-
     setIsModalOpen(false);
-    setCurrentUserEmail(nextEmail);
-    setIsLoggedIn(Boolean(nextEmail));
   };
 
   const handleLogoutClick = () => {
-    localStorage.removeItem('currentUser');
-    window.dispatchEvent(new Event(CURRENT_USER_CHANGE_EVENT));
-    setIsLoggedIn(false);
-    setCurrentUserEmail('');
+    logout();
     setIsAccountMenuOpen(false);
     navigate('/karis');
   };
@@ -137,7 +107,7 @@ function App() {
           />
           <Route
             path="/karis"
-            element={<HomePage barsKey={barsInstanceKey} currentUserEmail={currentUserEmail} />}
+            element={<HomePage barsKey={barsInstanceKey} />}
           />
           <Route path="/account" element={<AccountPage />} />
           <Route path="/about" element={<AboutPage />} />

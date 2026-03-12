@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import '../CSS/Modal.css';
+import { useAuth } from '../context/AuthContext';
 
 interface ModalProps {
   onClose: () => void;
@@ -12,9 +13,9 @@ interface StoredUser {
 }
 
 const USERS_STORAGE_KEY = 'users';
-const CURRENT_USER_CHANGE_EVENT = 'currentuserchange';
 
 const Modal: React.FC<ModalProps> = ({ onClose }) => {
+  const { login } = useAuth();
   const [signUpName, setSignUpName] = useState('');
   const [signUpEmail, setSignUpEmail] = useState('');
   const [signUpPassword, setSignUpPassword] = useState('');
@@ -65,11 +66,7 @@ const Modal: React.FC<ModalProps> = ({ onClose }) => {
       password: signUpPassword,
     });
     saveStoredUsers(users);
-    localStorage.setItem(
-      'currentUser',
-      JSON.stringify({ name: signUpName.trim(), email: normalizedEmail })
-    );
-    window.dispatchEvent(new Event(CURRENT_USER_CHANGE_EVENT));
+    login({ name: signUpName.trim(), email: normalizedEmail });
 
     alert('Sign up successful.');
     onClose();
@@ -95,11 +92,7 @@ const Modal: React.FC<ModalProps> = ({ onClose }) => {
       return;
     }
 
-    localStorage.setItem(
-      'currentUser',
-      JSON.stringify({ name: matchedUser.name, email: matchedUser.email })
-    );
-    window.dispatchEvent(new Event(CURRENT_USER_CHANGE_EVENT));
+    login({ name: matchedUser.name, email: matchedUser.email });
 
     alert('Sign in successful.');
     onClose();

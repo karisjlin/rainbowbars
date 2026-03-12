@@ -4,14 +4,13 @@ import '../CSS/homepage.css';
 
 interface HomePageProps {
   barsKey: string;
-  currentUserEmail: string;
 }
 
-function HomePage({ barsKey, currentUserEmail }: HomePageProps) {
+function HomePage({ barsKey }: HomePageProps) {
   return (
     <main className="homepage">
       <section className="homepage-stage">
-        <Bars key={barsKey} currentUserEmail={currentUserEmail} interactive />
+        <Bars key={barsKey} interactive />
       </section>
     </main>
   );
