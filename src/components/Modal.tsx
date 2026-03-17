@@ -3,28 +3,38 @@ import '../CSS/Modal.css';
 import { useAuth } from '../context/AuthContext';
 
 interface ModalProps {
+  // Called when the modal should close (overlay click, close button, or successful auth).
   onClose: () => void;
 }
 
+// Shape of a user record stored in localStorage.
 interface StoredUser {
   name: string;
   email: string;
   password: string;
 }
 
+// localStorage key for the list of all registered users.
 const USERS_STORAGE_KEY = 'users';
 
+// Overlay modal containing side-by-side Sign Up and Sign In forms.
+// All user data is stored in localStorage — no backend auth is used.
 const Modal: React.FC<ModalProps> = ({ onClose }) => {
   const { login } = useAuth();
+
+  // Sign Up form field state.
   const [signUpName, setSignUpName] = useState('');
   const [signUpEmail, setSignUpEmail] = useState('');
   const [signUpPassword, setSignUpPassword] = useState('');
 
+  // Sign In form field state.
   const [signInEmail, setSignInEmail] = useState('');
   const [signInPassword, setSignInPassword] = useState('');
 
+  // Validation / feedback message shown below the forms.
   const [formMessage, setFormMessage] = useState('');
 
+  // Reads the stored user list from localStorage, returning an empty array on failure.
   const getStoredUsers = (): StoredUser[] => {
     const rawUsers = localStorage.getItem(USERS_STORAGE_KEY);
     if (!rawUsers) {
@@ -39,10 +49,13 @@ const Modal: React.FC<ModalProps> = ({ onClose }) => {
     }
   };
 
+  // Persists the updated user list back to localStorage.
   const saveStoredUsers = (users: StoredUser[]) => {
     localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(users));
   };
 
+  // Handles the Sign Up form submission:
+  // validates fields, checks for duplicate email, saves the new user, and logs them in.
   const handleSignUp = (e: React.FormEvent) => {
     e.preventDefault();
     setFormMessage('');
@@ -72,6 +85,8 @@ const Modal: React.FC<ModalProps> = ({ onClose }) => {
     onClose();
   };
 
+  // Handles the Sign In form submission:
+  // looks up the user by email and password, then calls login on a match.
   const handleSignIn = (e: React.FormEvent) => {
     e.preventDefault();
     setFormMessage('');
@@ -99,10 +114,13 @@ const Modal: React.FC<ModalProps> = ({ onClose }) => {
   };
 
   return (
+    // Clicking the overlay backdrop closes the modal.
     <div className="modal-overlay" onClick={onClose}>
+      {/* Stop clicks inside the card from bubbling up to the overlay. */}
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <button className="modal-close" onClick={onClose}>&times;</button>
         <div className="forms-container">
+          {/* Sign Up section */}
           <div className="form-section">
             <h2>Sign Up</h2>
             <form onSubmit={handleSignUp}>
@@ -127,6 +145,8 @@ const Modal: React.FC<ModalProps> = ({ onClose }) => {
               <button type="submit">Sign Up</button>
             </form>
           </div>
+
+          {/* Sign In section */}
           <div className="form-section">
             <h2>Sign In</h2>
             <form onSubmit={handleSignIn}>
@@ -146,6 +166,8 @@ const Modal: React.FC<ModalProps> = ({ onClose }) => {
             </form>
           </div>
         </div>
+
+        {/* Displays validation errors or success feedback */}
         {formMessage && <p className="form-message">{formMessage}</p>}
       </div>
     </div>

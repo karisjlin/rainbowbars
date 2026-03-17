@@ -1,6 +1,8 @@
 import React from 'react';
 import '../CSS/about.css';
 
+// Each character of the "Rainbow Bars" heading paired with its rainbow color class.
+// Wrapping each character in its own <span> allows individual color styling.
 const rainbowTitle = [
   { char: 'R', colorClass: 'rainbow-red' },
   { char: 'a', colorClass: 'rainbow-orange' },
@@ -16,11 +18,14 @@ const rainbowTitle = [
   { char: 's', colorClass: 'rainbow-green' },
 ];
 
+// Static informational page describing what the app does and how it works.
 function AboutPage() {
   return (
     <main className="about-page">
       <section className="about-card">
         <p className="about-eyebrow">About</p>
+
+        {/* Render the title letter-by-letter so each character gets its own color. */}
         <h1 className="about-title" aria-label="Rainbow Bars">
           {rainbowTitle.map(({ char, colorClass }, index) => (
             <span key={`${char}-${index}`} className={colorClass}>
@@ -28,6 +33,7 @@ function AboutPage() {
             </span>
           ))}
         </h1>
+
         <p className="about-lead">
           This project animates layered color bars and lets each signed-in user save a
           personalized palette to their account.
